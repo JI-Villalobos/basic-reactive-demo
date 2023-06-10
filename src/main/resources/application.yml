@@ -1,0 +1,10 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://dbreactive:5432/currency_reactive
+    username: username
+    password: password
+  flyway:
+    url: jdbc:postgresql://dbreactive:5432/currency_reactive
+    user: username
+    password: password
+

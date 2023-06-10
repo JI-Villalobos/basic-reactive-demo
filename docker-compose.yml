@@ -1,0 +1,52 @@
+version: '3.5'
+
+services:
+  dbreactive:
+    container_name: reactive_postgresdb
+    image: postgres
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: currency_reactive
+      PGDATA: /data/postgres
+    volumes:
+      - dbreactive:/data/postgres
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+    networks:
+      - reactive_net
+    restart: unless-stopped
+
+  flyway:
+    image: flyway/flyway
+    command: -url=jdbc:postgresql://dbreactive:5432/currency_reactive -schemas=public -user=username -password=password -connectRetries=60 migrate
+    volumes:
+      - .:/flyway/sql
+    networks:
+      - reactive_net
+    depends_on:
+      - dbreactive
+
+
+  reactiveapp:
+    container_name: reactiveappcontainer
+    build: .
+    image: reactiveapp:v1
+    restart: no
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    depends_on:
+      - dbreactive
+    networks:
+      - reactive_net
+
+networks:
+  reactive_net:
+    driver: bridge
+
+volumes:
+  dbreactive:
