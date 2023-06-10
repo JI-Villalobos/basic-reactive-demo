@@ -26,7 +26,7 @@ jobs:
         run: ./gradlew build -x test
 
       - name: build Docker Image
-        uses: actions/build-push-action@v2
+        uses: docker/build-push-action@v2
         with:
           context: .
           dockerfile: Dockerfile
@@ -40,7 +40,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Push to Docker Hub
-        uses: actions/build-push-action@v2
+        uses: docker/build-push-action@v2
         with:
           context: .
           dockerfile: Dockerfile
